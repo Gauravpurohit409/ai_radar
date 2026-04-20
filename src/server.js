@@ -92,18 +92,32 @@ app.put("/api/settings", (req, res) => {
   }
 
   const db = readStore();
-  db.settings = {
+  const nextSettings = {
     ...db.settings,
     provider,
-    openai: {
-      ...db.settings.openai,
-      ...(openai || {})
-    },
-    grok: {
-      ...db.settings.grok,
-      ...(grok || {})
-    }
+    openai: { ...db.settings.openai },
+    grok: { ...db.settings.grok }
   };
+
+  if (provider === "openai") {
+    nextSettings.openai = {
+      ...nextSettings.openai,
+      ...(openai || {})
+    };
+    // Enforce one active provider by clearing the non-selected key.
+    nextSettings.grok.apiKey = "";
+  }
+
+  if (provider === "grok") {
+    nextSettings.grok = {
+      ...nextSettings.grok,
+      ...(grok || {})
+    };
+    // Enforce one active provider by clearing the non-selected key.
+    nextSettings.openai.apiKey = "";
+  }
+
+  db.settings = nextSettings;
   writeStore(db);
   res.json(db.settings);
 });

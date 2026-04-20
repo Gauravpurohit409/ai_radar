@@ -33,13 +33,17 @@
             <option value="openai">OpenAI</option>
             <option value="grok">Grok</option>
           </select>
-          <input id="openaiKey" placeholder="OpenAI API Key" />
-          <input id="openaiModel" placeholder="OpenAI Model (e.g. gpt-4o-mini)" />
-          <input id="grokKey" placeholder="Grok API Key" />
-          <input id="grokModel" placeholder="Grok Model (e.g. grok-beta)" />
+          <div id="openaiFields">
+            <input id="openaiKey" placeholder="OpenAI API Key" />
+            <input id="openaiModel" placeholder="OpenAI Model (e.g. gpt-4o-mini)" />
+          </div>
+          <div id="grokFields">
+            <input id="grokKey" placeholder="Grok API Key" />
+            <input id="grokModel" placeholder="Grok Model (e.g. grok-beta)" />
+          </div>
           <button type="submit">Save Settings</button>
         </form>
-        <small>Keys are stored locally in app storage.</small>
+        <small>Only the selected provider is active and saved as current.</small>
       </section>
 
       <section class="card">

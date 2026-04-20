@@ -9,8 +9,8 @@ const STORE_PATH = path.join(DATA_DIR, "store.json");
 
 const defaultData = {
   sources: [
-    { id: "openai", name: "OpenAI Changelog", url: "https://platform.openai.com/docs/changelog/rss.xml", active: true },
-    { id: "anthropic", name: "Anthropic News", url: "https://www.anthropic.com/news/rss.xml", active: true },
+    { id: "openai", name: "OpenAI News", url: "https://openai.com/news/rss.xml", active: true },
+    { id: "huggingface", name: "Hugging Face Blog", url: "https://huggingface.co/blog/feed.xml", active: true },
     { id: "google-ai", name: "Google AI Blog", url: "https://blog.google/technology/ai/rss/", active: true }
   ],
   settings: {

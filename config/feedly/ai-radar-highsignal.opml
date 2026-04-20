@@ -7,15 +7,15 @@
     <outline text="AI-Radar-HighSignal" title="AI-Radar-HighSignal">
       <outline
         type="rss"
-        text="OpenAI Changelog"
-        title="OpenAI Changelog"
-        xmlUrl="https://platform.openai.com/docs/changelog/rss.xml"
+        text="OpenAI News"
+        title="OpenAI News"
+        xmlUrl="https://openai.com/news/rss.xml"
       />
       <outline
         type="rss"
-        text="Anthropic News"
-        title="Anthropic News"
-        xmlUrl="https://www.anthropic.com/news/rss.xml"
+        text="Hugging Face Blog"
+        title="Hugging Face Blog"
+        xmlUrl="https://huggingface.co/blog/feed.xml"
       />
       <outline
         type="rss"

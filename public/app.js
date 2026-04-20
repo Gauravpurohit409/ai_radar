@@ -77,11 +77,25 @@ function renderDigest(digests) {
 }
 
 function renderSettings(settings) {
-  document.getElementById("providerSelect").value = settings.provider || "openai";
+  const provider = settings.provider || "openai";
+  document.getElementById("providerSelect").value = provider;
   document.getElementById("openaiKey").value = settings.openai?.apiKey || "";
   document.getElementById("openaiModel").value = settings.openai?.model || "gpt-4o-mini";
   document.getElementById("grokKey").value = settings.grok?.apiKey || "";
   document.getElementById("grokModel").value = settings.grok?.model || "grok-beta";
+  toggleProviderFields(provider);
+}
+
+function toggleProviderFields(provider) {
+  const openaiFields = document.getElementById("openaiFields");
+  const grokFields = document.getElementById("grokFields");
+  if (provider === "grok") {
+    openaiFields.style.display = "none";
+    grokFields.style.display = "block";
+  } else {
+    openaiFields.style.display = "block";
+    grokFields.style.display = "none";
+  }
 }
 
 async function refresh() {
@@ -136,23 +150,32 @@ document.getElementById("sourceForm").onsubmit = async (event) => {
 document.getElementById("settingsForm").onsubmit = async (event) => {
   event.preventDefault();
   const provider = document.getElementById("providerSelect").value;
-  const payload = {
-    provider,
-    openai: {
-      apiKey: document.getElementById("openaiKey").value.trim(),
-      model: document.getElementById("openaiModel").value.trim() || "gpt-4o-mini"
-    },
-    grok: {
-      apiKey: document.getElementById("grokKey").value.trim(),
-      model: document.getElementById("grokModel").value.trim() || "grok-beta"
-    }
-  };
+  const payload =
+    provider === "openai"
+      ? {
+          provider,
+          openai: {
+            apiKey: document.getElementById("openaiKey").value.trim(),
+            model: document.getElementById("openaiModel").value.trim() || "gpt-4o-mini"
+          }
+        }
+      : {
+          provider,
+          grok: {
+            apiKey: document.getElementById("grokKey").value.trim(),
+            model: document.getElementById("grokModel").value.trim() || "grok-beta"
+          }
+        };
   await api("/api/settings", {
     method: "PUT",
     body: JSON.stringify(payload)
   });
   alert("Settings saved.");
   await refresh();
+};
+
+document.getElementById("providerSelect").onchange = (event) => {
+  toggleProviderFields(event.target.value);
 };
 
 refresh().catch((error) => {
