@@ -26,6 +26,23 @@
       </section>
 
       <section class="card">
+        <h2>Settings</h2>
+        <form id="settingsForm">
+          <label for="providerSelect">Provider</label>
+          <select id="providerSelect">
+            <option value="openai">OpenAI</option>
+            <option value="grok">Grok</option>
+          </select>
+          <input id="openaiKey" placeholder="OpenAI API Key" />
+          <input id="openaiModel" placeholder="OpenAI Model (e.g. gpt-4o-mini)" />
+          <input id="grokKey" placeholder="Grok API Key" />
+          <input id="grokModel" placeholder="Grok Model (e.g. grok-beta)" />
+          <button type="submit">Save Settings</button>
+        </form>
+        <small>Keys are stored locally in app storage.</small>
+      </section>
+
+      <section class="card">
         <h2>Add Source</h2>
         <form id="sourceForm">
           <input id="sourceName" placeholder="Source name" required />

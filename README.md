@@ -9,7 +9,7 @@ No Feedly/Zapier/Notion required.
 - Add/remove/pause RSS sources in UI
 - Manual ingestion button (`Run Ingestion Now`)
 - Auto scheduler (8 AM + 6 PM ingest, 8:30 PM digest)
-- AI scoring per item (OpenAI if key exists, otherwise heuristic fallback)
+- AI scoring per item with provider selection (OpenAI or Grok) from UI settings
 - Dashboard with high-signal counts and latest items
 - Daily digest generation and history
 
@@ -37,6 +37,8 @@ No Feedly/Zapier/Notion required.
 
    Then set `OPENAI_API_KEY=...`
 
+You can also set provider and keys directly in the web app Settings page.
+
 3. Start app:
 
    ```bash
@@ -59,6 +61,8 @@ This repo includes `render.yaml`.
 ## API endpoints
 
 - `GET /api/health`
+- `GET /api/settings`
+- `PUT /api/settings`
 - `GET /api/sources`
 - `POST /api/sources`
 - `PATCH /api/sources/:id/toggle`

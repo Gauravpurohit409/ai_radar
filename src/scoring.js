@@ -54,20 +54,41 @@ function heuristicScore(item) {
 }
 
 export async function scoreItem(item) {
-  const apiKey = process.env.OPENAI_API_KEY;
+  const settings = item.settings || {};
+  const provider = settings.provider || "openai";
+  const openaiSettings = settings.openai || {};
+  const grokSettings = settings.grok || {};
+
+  const openaiEnvKey = process.env.OPENAI_API_KEY;
+  const grokEnvKey = process.env.GROK_API_KEY;
+
+  const apiKey =
+    provider === "grok"
+      ? (grokSettings.apiKey || grokEnvKey || "").trim()
+      : (openaiSettings.apiKey || openaiEnvKey || "").trim();
+
   if (!apiKey) {
     return heuristicScore(item);
   }
 
   try {
-    const client = new OpenAI({ apiKey });
+    const baseURL =
+      provider === "grok"
+        ? (grokSettings.baseUrl || "https://api.x.ai/v1").trim()
+        : undefined;
+    const model =
+      provider === "grok"
+        ? (grokSettings.model || "grok-beta").trim()
+        : (openaiSettings.model || process.env.OPENAI_MODEL || "gpt-4o-mini").trim();
+
+    const client = new OpenAI({ apiKey, ...(baseURL ? { baseURL } : {}) });
     const userPrompt = `Title: ${item.title || ""}
 Source: ${item.source || ""}
 PublishedAt: ${item.isoDate || ""}
 Snippet: ${item.contentSnippet || ""}
 URL: ${item.url || ""}`;
     const resp = await client.chat.completions.create({
-      model: process.env.OPENAI_MODEL || "gpt-4o-mini",
+      model,
       temperature: 0.2,
       response_format: { type: "json_object" },
       messages: [

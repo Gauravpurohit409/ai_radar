@@ -28,7 +28,7 @@ async function ingestFeeds() {
       const feed = await parser.parseURL(source.url);
       const latest = (feed.items || []).slice(0, 10);
       for (const raw of latest) {
-        const score = await scoreItem({ ...raw, source: source.name });
+        const score = await scoreItem({ ...raw, source: source.name, settings: db.settings });
         const item = {
           id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
           source: source.name,
@@ -79,6 +79,33 @@ app.get("/api/health", (_req, res) => {
 
 app.get("/api/sources", (_req, res) => {
   res.json(readStore().sources);
+});
+
+app.get("/api/settings", (_req, res) => {
+  res.json(readStore().settings);
+});
+
+app.put("/api/settings", (req, res) => {
+  const { provider, openai, grok } = req.body || {};
+  if (!provider || !["openai", "grok"].includes(provider)) {
+    return res.status(400).json({ error: "provider must be openai or grok" });
+  }
+
+  const db = readStore();
+  db.settings = {
+    ...db.settings,
+    provider,
+    openai: {
+      ...db.settings.openai,
+      ...(openai || {})
+    },
+    grok: {
+      ...db.settings.grok,
+      ...(grok || {})
+    }
+  };
+  writeStore(db);
+  res.json(db.settings);
 });
 
 app.post("/api/sources", (req, res) => {
@@ -171,7 +198,8 @@ app.get("/api/stats", (_req, res) => {
     highSignalCount: high,
     testThisWeekCount: test,
     ignoredCount: ignored,
-    lastIngestedAt: db.lastIngestedAt
+    lastIngestedAt: db.lastIngestedAt,
+    provider: db.settings?.provider || "openai"
   });
 });
 

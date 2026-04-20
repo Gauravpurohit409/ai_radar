@@ -17,6 +17,7 @@ function renderStats(stats) {
     <div class="stat"><strong>Test This Week</strong><div>${stats.testThisWeekCount}</div></div>
     <div class="stat"><strong>Ignored</strong><div>${stats.ignoredCount}</div></div>
     <div class="stat"><strong>Last Ingest</strong><div>${stats.lastIngestedAt || "-"}</div></div>
+    <div class="stat"><strong>Provider</strong><div>${stats.provider || "openai"}</div></div>
   `;
 }
 
@@ -75,17 +76,27 @@ function renderDigest(digests) {
   el.textContent = digests[0]?.text || "No digest generated yet.";
 }
 
+function renderSettings(settings) {
+  document.getElementById("providerSelect").value = settings.provider || "openai";
+  document.getElementById("openaiKey").value = settings.openai?.apiKey || "";
+  document.getElementById("openaiModel").value = settings.openai?.model || "gpt-4o-mini";
+  document.getElementById("grokKey").value = settings.grok?.apiKey || "";
+  document.getElementById("grokModel").value = settings.grok?.model || "grok-beta";
+}
+
 async function refresh() {
-  const [stats, sources, items, digests] = await Promise.all([
+  const [stats, sources, items, digests, settings] = await Promise.all([
     api("/api/stats"),
     api("/api/sources"),
     api("/api/items?limit=100"),
-    api("/api/digests")
+    api("/api/digests"),
+    api("/api/settings")
   ]);
   renderStats(stats);
   renderSources(sources);
   renderItems(items);
   renderDigest(digests);
+  renderSettings(settings);
 }
 
 document.getElementById("btnIngest").onclick = async () => {
@@ -119,6 +130,28 @@ document.getElementById("sourceForm").onsubmit = async (event) => {
     body: JSON.stringify({ name, url })
   });
   document.getElementById("sourceForm").reset();
+  await refresh();
+};
+
+document.getElementById("settingsForm").onsubmit = async (event) => {
+  event.preventDefault();
+  const provider = document.getElementById("providerSelect").value;
+  const payload = {
+    provider,
+    openai: {
+      apiKey: document.getElementById("openaiKey").value.trim(),
+      model: document.getElementById("openaiModel").value.trim() || "gpt-4o-mini"
+    },
+    grok: {
+      apiKey: document.getElementById("grokKey").value.trim(),
+      model: document.getElementById("grokModel").value.trim() || "grok-beta"
+    }
+  };
+  await api("/api/settings", {
+    method: "PUT",
+    body: JSON.stringify(payload)
+  });
+  alert("Settings saved.");
   await refresh();
 };
 

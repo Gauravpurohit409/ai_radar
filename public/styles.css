@@ -57,6 +57,14 @@ input {
   border-radius: 8px;
 }
 
+select {
+  background: #0b1220;
+  border: 1px solid #334155;
+  color: #e2e8f0;
+  padding: 8px;
+  border-radius: 8px;
+}
+
 form {
   display: flex;
   gap: 8px;
