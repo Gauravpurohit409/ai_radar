@@ -8,6 +8,18 @@ async function api(path, options = {}) {
   return res.json();
 }
 
+const state = {
+  selectedCategory: "all"
+};
+
+function addActivity(message) {
+  const box = document.getElementById("activityLog");
+  const row = document.createElement("div");
+  row.className = "activity-line";
+  row.textContent = `${new Date().toLocaleTimeString()} - ${message}`;
+  box.prepend(row);
+}
+
 function renderStats(stats) {
   const el = document.getElementById("stats");
   el.innerHTML = `
@@ -61,8 +73,11 @@ function renderItems(items) {
     const div = document.createElement("div");
     div.className = "item";
     div.innerHTML = `
-      <strong>${item.title}</strong>
-      <div>${item.source} | score: ${item.totalScore}</div>
+      <div class="item-header">
+        <strong>${item.title}</strong>
+        <span class="badge">score: ${item.totalScore}</span>
+      </div>
+      <div>${item.source}</div>
       <div><span class="badge">${item.category}</span> <span class="badge">${item.status}</span></div>
       <p>${item.summary}</p>
       <a href="${item.url}" target="_blank" rel="noreferrer">Open</a>
@@ -74,6 +89,24 @@ function renderItems(items) {
 function renderDigest(digests) {
   const el = document.getElementById("digest");
   el.textContent = digests[0]?.text || "No digest generated yet.";
+}
+
+function renderAllSummary(payload) {
+  document.getElementById("allSummary").textContent = payload.summary || "No summary available.";
+}
+
+function renderCategories(categories) {
+  const select = document.getElementById("categoryFilter");
+  const previous = state.selectedCategory || "all";
+  select.innerHTML = "";
+  categories.forEach((category) => {
+    const opt = document.createElement("option");
+    opt.value = category;
+    opt.textContent = category === "all" ? "All categories" : category;
+    select.appendChild(opt);
+  });
+  select.value = categories.includes(previous) ? previous : "all";
+  state.selectedCategory = select.value;
 }
 
 function renderSettings(settings) {
@@ -99,40 +132,62 @@ function toggleProviderFields(provider) {
 }
 
 async function refresh() {
-  const [stats, sources, items, digests, settings] = await Promise.all([
+  const categoryQuery = encodeURIComponent(state.selectedCategory || "all");
+  const [stats, sources, items, digests, settings, categories, allSummary] = await Promise.all([
     api("/api/stats"),
     api("/api/sources"),
-    api("/api/items?limit=100"),
+    api(`/api/items?limit=100&category=${categoryQuery}`),
     api("/api/digests"),
-    api("/api/settings")
+    api("/api/settings"),
+    api("/api/categories"),
+    api("/api/items-summary")
   ]);
   renderStats(stats);
   renderSources(sources);
+  renderCategories(categories);
   renderItems(items);
+  renderAllSummary(allSummary);
   renderDigest(digests);
   renderSettings(settings);
 }
 
 document.getElementById("btnIngest").onclick = async () => {
+  addActivity("Running ingestion...");
   const out = await api("/api/ingest", { method: "POST" });
   if (out.errors?.length) {
     console.warn("Ingestion errors:", out.errors);
-    alert(`Ingestion completed with ${out.errors.length} source error(s). Check browser console.`);
+    addActivity(`Ingestion finished with ${out.errors.length} source errors.`);
+  } else {
+    addActivity(`Ingestion completed. Added ${out.added} new items.`);
   }
   await refresh();
 };
 
 document.getElementById("btnSeed").onclick = async () => {
+  addActivity("Loading sample data...");
   await api("/api/seed-sample", { method: "POST" });
+  addActivity("Sample data loaded.");
   await refresh();
 };
 
 document.getElementById("btnDigest").onclick = async () => {
-  await api("/api/digest", { method: "POST" });
+  addActivity("Generating daily digest...");
+  const digest = await api("/api/digest", { method: "POST" });
+  addActivity(`Digest generated with ${digest.itemCount} items.`);
   await refresh();
 };
 
-document.getElementById("btnRefresh").onclick = refresh;
+document.getElementById("btnRefresh").onclick = async () => {
+  addActivity("Refreshing dashboard...");
+  await refresh();
+  addActivity("Dashboard refreshed.");
+};
+
+document.getElementById("categoryFilter").onchange = async (event) => {
+  state.selectedCategory = event.target.value;
+  addActivity(`Category filter set to: ${state.selectedCategory}`);
+  await refresh();
+};
 
 document.getElementById("sourceForm").onsubmit = async (event) => {
   event.preventDefault();
@@ -170,7 +225,7 @@ document.getElementById("settingsForm").onsubmit = async (event) => {
     method: "PUT",
     body: JSON.stringify(payload)
   });
-  alert("Settings saved.");
+  addActivity(`Settings saved. Active provider: ${provider}`);
   await refresh();
 };
 
@@ -180,5 +235,5 @@ document.getElementById("providerSelect").onchange = (event) => {
 
 refresh().catch((error) => {
   console.error(error);
-  alert("Failed to load dashboard.");
+  addActivity("Failed to load dashboard. Check network/server.");
 });

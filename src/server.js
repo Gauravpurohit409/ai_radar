@@ -73,6 +73,33 @@ function createDigest() {
   return digest;
 }
 
+function buildAllArticlesSummary(items) {
+  if (!items.length) {
+    return "No articles available yet. Run ingestion to fetch updates.";
+  }
+
+  const categoryCounts = items.reduce((acc, item) => {
+    const key = item.category || "Uncategorized";
+    acc[key] = (acc[key] || 0) + 1;
+    return acc;
+  }, {});
+  const topByScore = [...items].sort((a, b) => b.totalScore - a.totalScore).slice(0, 5);
+
+  const lines = ["All Articles Summary", ""];
+  lines.push(`Total items: ${items.length}`);
+  lines.push(
+    `Categories: ${Object.entries(categoryCounts)
+      .map(([name, count]) => `${name} (${count})`)
+      .join(", ")}`
+  );
+  lines.push("");
+  lines.push("Top updates by score:");
+  topByScore.forEach((item, idx) => {
+    lines.push(`${idx + 1}. [${item.totalScore}] ${item.title} (${item.category})`);
+  });
+  return lines.join("\n");
+}
+
 app.get("/api/health", (_req, res) => {
   res.json({ ok: true, service: "ai-radar-web" });
 });
@@ -197,7 +224,23 @@ app.post("/api/seed-sample", (_req, res) => {
 
 app.get("/api/items", (req, res) => {
   const limit = Number(req.query.limit || 100);
-  res.json(readStore().items.slice(0, limit));
+  const category = req.query.category;
+  const items = readStore().items
+    .filter((item) => !category || category === "all" || item.category === category)
+    .sort((a, b) => b.totalScore - a.totalScore);
+  res.json(items.slice(0, limit));
+});
+
+app.get("/api/categories", (_req, res) => {
+  const categories = [...new Set(readStore().items.map((item) => item.category).filter(Boolean))].sort();
+  res.json(["all", ...categories]);
+});
+
+app.get("/api/items-summary", (_req, res) => {
+  const items = readStore().items;
+  res.json({
+    summary: buildAllArticlesSummary(items)
+  });
 });
 
 app.get("/api/stats", (_req, res) => {

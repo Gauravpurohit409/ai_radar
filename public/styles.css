@@ -71,6 +71,13 @@ form {
   flex-wrap: wrap;
 }
 
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -90,6 +97,26 @@ form {
   padding: 10px;
   margin-bottom: 8px;
   background: #0b1220;
+}
+
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: center;
+}
+
+#activityLog {
+  background: #0b1220;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 10px;
+  min-height: 44px;
+}
+
+.activity-line {
+  margin-bottom: 8px;
+  font-size: 14px;
 }
 
 .badge {
