@@ -1,0 +1,23 @@
+[
+  {
+    "title": "OpenAI adds new structured output controls",
+    "source": "OpenAI Changelog",
+    "publishedAt": "2026-04-15T09:00:00Z",
+    "snippet": "Developers can now enforce stricter response schemas and improve deterministic parsing for production workflows.",
+    "url": "https://platform.openai.com/docs/changelog/example-1"
+  },
+  {
+    "title": "Anthropic releases latency improvements for Claude API",
+    "source": "Anthropic News",
+    "publishedAt": "2026-04-15T07:30:00Z",
+    "snippet": "Claude API now supports faster streaming and reduced first-token latency for enterprise plans.",
+    "url": "https://www.anthropic.com/news/example-2"
+  },
+  {
+    "title": "Viral thread claims AGI breakthrough from unknown startup",
+    "source": "Social Summary",
+    "publishedAt": "2026-04-15T11:10:00Z",
+    "snippet": "No benchmark data or code released; claims are based on screenshots and anonymous testimonials.",
+    "url": "https://example.com/rumor-post"
+  }
+]

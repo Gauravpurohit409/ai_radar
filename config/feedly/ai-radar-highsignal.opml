@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="1.0">
+  <head>
+    <title>AI-Radar-HighSignal</title>
+  </head>
+  <body>
+    <outline text="AI-Radar-HighSignal" title="AI-Radar-HighSignal">
+      <outline
+        type="rss"
+        text="OpenAI Changelog"
+        title="OpenAI Changelog"
+        xmlUrl="https://platform.openai.com/docs/changelog/rss.xml"
+      />
+      <outline
+        type="rss"
+        text="Anthropic News"
+        title="Anthropic News"
+        xmlUrl="https://www.anthropic.com/news/rss.xml"
+      />
+      <outline
+        type="rss"
+        text="Google AI Blog"
+        title="Google AI Blog"
+        xmlUrl="https://blog.google/technology/ai/rss/"
+      />
+      <outline
+        type="rss"
+        text="Meta AI Blog"
+        title="Meta AI Blog"
+        xmlUrl="https://ai.meta.com/blog/rss/"
+      />
+      <outline
+        type="rss"
+        text="Hugging Face Blog"
+        title="Hugging Face Blog"
+        xmlUrl="https://huggingface.co/blog/feed.xml"
+      />
+      <outline
+        type="rss"
+        text="LangChain Blog"
+        title="LangChain Blog"
+        xmlUrl="https://blog.langchain.dev/rss/"
+      />
+      <outline
+        type="rss"
+        text="Vercel Blog"
+        title="Vercel Blog"
+        xmlUrl="https://vercel.com/atom"
+      />
+      <outline
+        type="rss"
+        text="GitHub Trending (AI topic)"
+        title="GitHub Trending (AI topic)"
+        xmlUrl="https://github.com/trending?since=daily&amp;spoken_language_code=en"
+      />
+      <outline
+        type="rss"
+        text="The Rundown AI"
+        title="The Rundown AI"
+        xmlUrl="https://www.therundown.ai/feed"
+      />
+      <outline
+        type="rss"
+        text="TLDR AI"
+        title="TLDR AI"
+        xmlUrl="https://tldr.tech/ai/feed"
+      />
+      <outline
+        type="rss"
+        text="Ben's Bites"
+        title="Ben's Bites"
+        xmlUrl="https://www.bensbites.com/rss.xml"
+      />
+    </outline>
+  </body>
+</opml>

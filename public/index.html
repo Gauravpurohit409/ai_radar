@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Radar Web</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>AI Radar Web</h1>
+      <p>One dashboard for AI updates, scoring, and daily digest.</p>
+    </header>
+
+    <main>
+      <section class="card actions">
+        <button id="btnIngest">Run Ingestion Now</button>
+        <button id="btnSeed" class="secondary">Load Sample Data</button>
+        <button id="btnDigest">Generate Daily Digest</button>
+        <button id="btnRefresh">Refresh Dashboard</button>
+      </section>
+
+      <section class="card">
+        <h2>Stats</h2>
+        <div id="stats" class="grid"></div>
+      </section>
+
+      <section class="card">
+        <h2>Add Source</h2>
+        <form id="sourceForm">
+          <input id="sourceName" placeholder="Source name" required />
+          <input id="sourceUrl" placeholder="RSS URL" required />
+          <button type="submit">Add Source</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Sources</h2>
+        <div id="sources"></div>
+      </section>
+
+      <section class="card">
+        <h2>Latest Items</h2>
+        <div id="items"></div>
+      </section>
+
+      <section class="card">
+        <h2>Latest Digest</h2>
+        <pre id="digest"></pre>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+  </html>

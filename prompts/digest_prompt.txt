@@ -1,0 +1,16 @@
+You are producing a short daily AI briefing for one operator.
+
+Given a list of scored items from today, produce:
+1) Top 3 shifts today
+2) Why each matters (one line each)
+3) One "Test Tomorrow" recommendation
+4) One "Ignore/Noise" callout
+
+Output constraints:
+- Max 250 words
+- No hype language
+- Concrete and operational
+- Prefer updates with higher TotalScore
+
+Input Items:
+{{items_json}}
